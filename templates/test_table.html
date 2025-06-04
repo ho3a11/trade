@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <title>تست رنگ سطر</title>
+    <style>
+        .red-row { background: #ffcccc; }
+    </style>
+</head>
+<body>
+    <p>red_indices: {{ red_indices }}</p>
+    <table border="1">
+        <tr>
+            {% for col in columns %}
+                <th>{{ col }}</th>
+            {% endfor %}
+        </tr>
+        {% for row in rows %}
+            <tr class="{% if forloop.counter0 in red_indices %}red-row{% endif %}">
+                {% for cell in row %}
+                    <td>{{ cell }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

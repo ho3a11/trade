@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fa" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <title>آپلود فایل معاملات</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap 5.3 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <style>
+        body {
+            transition: background 0.3s, color 0.3s;
+        }
+        .theme-toggle {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="bg-body-secondary">
+<div class="container py-5">
+    <div class="d-flex justify-content-end mb-3">
+        <button class="btn btn-outline-secondary theme-toggle" id="themeToggleBtn" title="تغییر تم">
+            <span id="themeIcon" class="bi bi-moon"></span> تغییر تم
+        </button>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center">
+                    <h4>آپلود دو فایل اکسل معاملات</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data" novalidate>
+                        {% csrf_token %}
+                        {% for field in form %}
+                            <div class="mb-3">
+                                {{ field.label_tag }}<br>
+                                {% if field.name == "file1" or field.name == "file2" %}
+                                    <input type="file" name="{{ field.name }}" accept=".xlsx" class="form-control" required>
+                                {% else %}
+                                    {{ field }}
+                                {% endif %}
+                                {% if field.errors %}
+                                    <div class="text-danger small">{{ field.errors|striptags }}</div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-success w-100">بررسی و نمایش جدول</button>
+                    </form>
+                </div>
+                <div class="card-footer text-center">
+                    <small class="text-muted">فرمت فایل باید .xlsx باشد</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Bootstrap Icons CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<script>
+    // دارک/لایت مد
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const htmlTag = document.documentElement;
+    const themeIcon = document.getElementById('themeIcon');
+    function setTheme(theme) {
+        htmlTag.setAttribute('data-bs-theme', theme);
+        if(theme === 'dark') {
+            themeIcon.className = 'bi bi-sun';
+        } else {
+            themeIcon.className = 'bi bi-moon';
+        }
+        localStorage.setItem('theme', theme);
+    }
+    themeToggleBtn.addEventListener('click', () => {
+        const current = htmlTag.getAttribute('data-bs-theme');
+        setTheme(current === 'dark' ? 'light' : 'dark');
+    });
+    // Load theme from localStorage
+    (function() {
+        const saved = localStorage.getItem('theme');
+        if(saved) setTheme(saved);
+    })();
+</script>
+</body>
+</html>
